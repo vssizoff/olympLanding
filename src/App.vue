@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ParticlesBg from "@/components/ParticlesBg.vue";
-import {computed, ref} from "vue";
+import {computed, ref, useTemplateRef} from "vue";
 import {useColorMode} from "@vueuse/core";
 import LetterPullup from "@/components/LetterPullup.vue";
 import RippleButton from "@/components/RippleButton.vue";
@@ -8,9 +8,14 @@ import {InputText, FloatLabel, Panel} from "primevue";
 
 const isDark = computed(() => useColorMode().value == "dark");
 const name = ref("");
+const formRef = useTemplateRef("formRef");
 
 function matchMedia(query: string) {
   return window.matchMedia(query).matches;
+}
+
+function scroll() {
+  if (formRef.value) formRef.value.scrollIntoView({behavior: 'smooth'});
 }
 </script>
 
@@ -33,7 +38,7 @@ function matchMedia(query: string) {
           <LetterPullup words="олимпиада" :class="`text-center text-white text ${$style.text}`"/>
         </template>
         <LetterPullup words="для 5 классов школы 171" class="text-white"/>
-        <RippleButton class="button" @click="$refs.formRef.scrollIntoView({behavior: 'smooth'})">Регистрация</RippleButton>
+        <RippleButton class="button" @click="scroll">Регистрация</RippleButton>
       </div>
       <div class="form" ref="formRef">
         <Panel :class="$style.form">
