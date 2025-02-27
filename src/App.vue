@@ -25,19 +25,19 @@ function scroll() {
   >
     <div class="content z-10">
       <div class="first">
-        <template v-if="matchMedia('(width >= 800px)')">
-          <LetterPullup words="Устная математическая олимпиада" :class="`text-center text-white text ${$style.text}`"/>
-        </template>
-        <template v-else-if="matchMedia('(width >= 520px)')">
-          <LetterPullup words="Устная математическая" :class="`text-center text-white text ${$style.text}`"/>
-          <LetterPullup words="олимпиада" :class="`text-center text-white text ${$style.text}`"/>
-        </template>
-        <template v-else>
+<!--        <template v-if="matchMedia('(width >= 800px)')">-->
+<!--          <LetterPullup words="Устная математическая олимпиада" :class="`text-center text-white text ${$style.text}`"/>-->
+<!--        </template>-->
+<!--        <template v-else-if="matchMedia('(width >= 520px)')">-->
+<!--          <LetterPullup words="Устная математическая" :class="`text-center text-white text ${$style.text}`"/>-->
+<!--          <LetterPullup words="олимпиада" :class="`text-center text-white text ${$style.text}`"/>-->
+<!--        </template>-->
+<!--        <template v-else>-->
           <LetterPullup words="Устная" :class="`text-center text-white text ${$style.text}`"/>
           <LetterPullup words="математическая" :class="`text-center text-white text ${$style.text}`"/>
           <LetterPullup words="олимпиада" :class="`text-center text-white text ${$style.text}`"/>
-        </template>
-        <LetterPullup words="для 5 классов школы 171" class="text-white"/>
+<!--        </template>-->
+        <LetterPullup words="для 5 классов школы 171" :class="`text-white ${$style.subtext}`"/>
         <RippleButton class="button" @click="scroll">Регистрация</RippleButton>
       </div>
       <div class="form" ref="formRef">
@@ -54,6 +54,7 @@ function scroll() {
               <InputText id="letter" v-model="name"/>
               <label for="letter">Буква класса</label>
             </FloatLabel>
+            <RippleButton class="formButton">Регистрация</RippleButton>
           </div>
         </Panel>
       </div>
@@ -87,6 +88,11 @@ function scroll() {
   }
 }
 
+.subtext {
+  font-family: "Comfortaa", serif;
+  font-size: 24px;
+}
+
 .form {
   display: inline;
 }
@@ -107,9 +113,18 @@ html, body, #app {
 
 .button {
   font-family: "Comfortaa", serif;
-  font-size: 48px;
+  font-size: 32px;
   color: white;
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 40px;
+}
+
+.formButton {
+  font-family: "Comfortaa", serif;
+  font-size: 20px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 40px;
 }
 
 .first {
