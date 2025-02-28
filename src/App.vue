@@ -4,10 +4,13 @@ import {computed, ref, useTemplateRef} from "vue";
 import {useColorMode} from "@vueuse/core";
 import LetterPullup from "@/components/LetterPullup.vue";
 import RippleButton from "@/components/RippleButton.vue";
-import {InputText, FloatLabel, Panel} from "primevue";
+import {FloatLabel, InputText, Panel} from "primevue";
+import MorphingText from "@/components/MorphingText.vue";
 
 const isDark = computed(() => useColorMode().value == "dark");
 const name = ref("");
+const letter = ref("");
+const texts = ref(["π =", "3.14", "1592", "654..."]);
 const formRef = useTemplateRef("formRef");
 
 function matchMedia(query: string) {
@@ -51,7 +54,7 @@ function scroll() {
               <label for="name">ФИО</label>
             </FloatLabel>
             <FloatLabel variant="on">
-              <InputText id="letter" v-model="name"/>
+              <InputText id="letter" v-model="letter"/>
               <label for="letter">Буква класса</label>
             </FloatLabel>
             <RippleButton class="formButton">Регистрация</RippleButton>
@@ -67,6 +70,8 @@ function scroll() {
       :staticity="10"
       refresh
     />
+<!--    <img :src="piSvg" class="pi"/>-->
+    <MorphingText :texts="texts" :class="$style.pi"/>
   </div>
 </template>
 
@@ -75,16 +80,20 @@ function scroll() {
   font-family: "Comfortaa", serif;
 
   
-  @media (width >= 1700px) {
+  @media (width >= 1000px) {
     font-size: 80px;
   }
 
-  @media (1250px <= width < 1700px) {
+  @media (770px <= width < 1000px) {
     font-size: 60px;
   }
 
-  @media (1000px <= width < 1250px) {
+  @media (500px <= width < 770px) {
     font-size: 48px;
+  }
+
+  @media (width < 500px) {
+    font-size: 32px;
   }
 }
 
@@ -96,11 +105,21 @@ function scroll() {
 .form {
   display: inline;
 }
+
+.pi {
+  position: absolute;
+  bottom: 80px;
+  right: 10px;
+  text-align: right;
+  font-size: 150px;
+  font-family: "Comfortaa", serif;
+}
 </style>
 
 <style>
 html, body, #app {
   height: 100%;
+  overflow-x: hidden;
 }
 </style>
 
@@ -109,6 +128,7 @@ html, body, #app {
   width: 100%;
   overflow: scroll;
   text-align: center;
+  overflow-x: hidden;
 }
 
 .button {
@@ -152,5 +172,40 @@ html, body, #app {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+}
+
+@keyframes piAnimate {
+  0%, 100% {
+    bottom: 0;
+    right: 0;
+    transform: rotate(0);
+  }
+  20% {
+    bottom: 60vh;
+    right: 0;
+    transform: rotate(60deg);
+  }
+  40% {
+    bottom: 70vh;
+    right: 60vw;
+    transform: rotate(60deg);
+  }
+  60% {
+    bottom: 20vh;
+    right: 0;
+    transform: rotate(60deg);
+  }
+  80% {
+    bottom: 20vh;
+    right: 0;
+    transform: rotate(60deg);
+  }
+}
+
+.pi {
+  position: absolute;
+  height: 30vh;
+  z-index: 0;
+  animation: piAnimate 2s infinite ease-in-out;
 }
 </style>
