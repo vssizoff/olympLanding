@@ -6,10 +6,16 @@ import LetterPullup from "@/components/LetterPullup.vue";
 import RippleButton from "@/components/RippleButton.vue";
 import {FloatLabel, InputText, Panel} from "primevue";
 import MorphingText from "@/components/MorphingText.vue";
+import piSvg from "@/assets/pi.svg"
+import ParticleImage from "@/components/ParticleImage.vue";
+import ProgressIndicator from "@/components/progressIndicator.vue";
+import confetti from "canvas-confetti";
 
 const isDark = computed(() => useColorMode().value == "dark");
 const name = ref("");
 const letter = ref("");
+const pending = ref(false);
+const done = ref(false);
 const texts = ref(["π =", "3.14", "1592", "654..."]);
 const formRef = useTemplateRef("formRef");
 
@@ -19,6 +25,87 @@ function matchMedia(query: string) {
 
 function scroll() {
   if (formRef.value) formRef.value.scrollIntoView({behavior: 'smooth'});
+}
+
+function fireworks() {
+  const duration = 5 * 1000; // 5 seconds
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+  // Helper function to get a random value between a range
+  function randomInRange(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+
+  const interval = window.setInterval(() => {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      return;
+    }
+
+    const particleCount = 50 * (timeLeft / duration);
+
+    // Confetti from left side
+    confetti({
+      ...defaults,
+      particleCount,
+      origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+    });
+
+    // Confetti from right side
+    confetti({
+      ...defaults,
+      particleCount,
+      origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+    });
+  }, 250);
+}
+
+function sideCannons() {
+  const end = Date.now() + 6 * 1000; // 3 seconds
+  const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+
+  // Frame function to trigger confetti cannons
+  function frame() {
+    if (Date.now() > end) return;
+
+    // Left side confetti cannon
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      startVelocity: 60,
+      origin: { x: 0, y: 0.5 },
+      colors: colors,
+    });
+
+    // Right side confetti cannon
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      startVelocity: 60,
+      origin: { x: 1, y: 0.5 },
+      colors: colors,
+    });
+
+    requestAnimationFrame(frame); // Keep calling the frame function
+  }
+
+  frame();
+}
+
+async function submit() {
+  if (!name.value.length || !letter.value.length) return;
+  pending.value = true;
+  // @ts-ignore
+  await reg(name.value, letter.value);
+  done.value = true;
+  pending.value = false;
+  fireworks();
+  sideCannons();
 }
 </script>
 
@@ -54,10 +141,10 @@ function scroll() {
               <label for="name">ФИО</label>
             </FloatLabel>
             <FloatLabel variant="on">
-              <InputText id="letter" v-model="letter"/>
+              <InputText id="letter" v-model="letter" :maxLength="1"/>
               <label for="letter">Буква класса</label>
             </FloatLabel>
-            <RippleButton class="formButton">Регистрация</RippleButton>
+            <RippleButton class="formButton" @click="submit">Регистрация</RippleButton>
           </div>
         </Panel>
       </div>
@@ -72,6 +159,10 @@ function scroll() {
     />
 <!--    <img :src="piSvg" class="pi"/>-->
     <MorphingText :texts="texts" :class="$style.pi"/>
+    <div :class="$style.image">
+      <ParticleImage :image-src="piSvg" init-position="misplaced" fade-position="explode"/>
+    </div>
+    <ProgressIndicator v-if="pending"/>
   </div>
 </template>
 
@@ -109,10 +200,17 @@ function scroll() {
 .pi {
   position: absolute;
   bottom: 80px;
-  right: 10px;
-  text-align: right;
+  left: 10px;
+  text-align: left;
   font-size: 150px;
   font-family: "Comfortaa", serif;
+}
+
+.image {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 100;
 }
 </style>
 
@@ -172,40 +270,5 @@ html, body, #app {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-}
-
-@keyframes piAnimate {
-  0%, 100% {
-    bottom: 0;
-    right: 0;
-    transform: rotate(0);
-  }
-  20% {
-    bottom: 60vh;
-    right: 0;
-    transform: rotate(60deg);
-  }
-  40% {
-    bottom: 70vh;
-    right: 60vw;
-    transform: rotate(60deg);
-  }
-  60% {
-    bottom: 20vh;
-    right: 0;
-    transform: rotate(60deg);
-  }
-  80% {
-    bottom: 20vh;
-    right: 0;
-    transform: rotate(60deg);
-  }
-}
-
-.pi {
-  position: absolute;
-  height: 30vh;
-  z-index: 0;
-  animation: piAnimate 2s infinite ease-in-out;
 }
 </style>
