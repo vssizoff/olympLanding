@@ -1,4 +1,4 @@
-const SERVER = "http://176.123.165.201:8000";
+const SERVER = "https://176.123.165.201:8001";
 
 export async function reg(name: string, letter: string) {
     await fetch(`${SERVER}/reg`, {

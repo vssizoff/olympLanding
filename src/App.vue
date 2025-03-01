@@ -10,6 +10,7 @@ import piSvg from "@/assets/pi.svg"
 import ParticleImage from "@/components/ParticleImage.vue";
 import ProgressIndicator from "@/components/progressIndicator.vue";
 import confetti from "canvas-confetti";
+import {reg} from "@/api.js";
 
 const isDark = computed(() => useColorMode().value == "dark");
 const name = ref("");
@@ -100,7 +101,6 @@ function sideCannons() {
 async function submit() {
   if (!name.value.length || !letter.value.length) return;
   pending.value = true;
-  // @ts-ignore
   await reg(name.value, letter.value);
   done.value = true;
   pending.value = false;
