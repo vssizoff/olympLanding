@@ -13,8 +13,8 @@ import confetti from "canvas-confetti";
 import {reg} from "@/api.js";
 
 const isDark = computed(() => useColorMode().value == "dark");
-const name = ref("");
-const letter = ref("");
+const name = ref<string | undefined>("");
+const letter = ref<string | undefined>("");
 const pending = ref(false);
 const done = ref(false);
 const texts = ref(["π =", "3.14", "1592", "654..."]);
@@ -99,7 +99,7 @@ function sideCannons() {
 }
 
 async function submit() {
-  if (!name.value.length || !letter.value.length) return;
+  if (!name.value?.length || !letter.value?.length) return;
   pending.value = true;
   await reg(name.value, letter.value);
   done.value = true;

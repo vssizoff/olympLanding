@@ -1,4 +1,4 @@
-const SERVER = "https://176.123.165.201:8001";
+const SERVER = "https://user591149352-kbnk5iug.tunnel.vk-apps.com";
 
 export async function reg(name: string, letter: string) {
     await fetch(`${SERVER}/reg`, {
