@@ -153,7 +153,7 @@ async function submit() {
       class="absolute inset-0 z-1"
       :quantity="100"
       :ease="100"
-      :color="isDark ? '#FFF' : '#000'"
+      color="#FFF"
       :staticity="10"
       refresh
     />
@@ -204,6 +204,7 @@ async function submit() {
   text-align: left;
   font-size: 150px;
   font-family: "Comfortaa", serif;
+  color: white;
 }
 
 .image {
