@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import ParticlesBg from "@/components/ParticlesBg.vue";
-import {computed, ref, useTemplateRef} from "vue";
-import {useColorMode} from "@vueuse/core";
+import {ref, useTemplateRef} from "vue";
 import LetterPullup from "@/components/LetterPullup.vue";
 import RippleButton from "@/components/RippleButton.vue";
 import {FloatLabel, InputText, Panel} from "primevue";
 import MorphingText from "@/components/MorphingText.vue";
-import piSvg from "@/assets/pi.svg"
+import logo54 from "@/assets/logo54.png"
 import ParticleImage from "@/components/ParticleImage.vue";
 import ProgressIndicator from "@/components/progressIndicator.vue";
 import confetti from "canvas-confetti";
 import {reg} from "@/api.js";
 
-const isDark = computed(() => useColorMode().value == "dark");
 const name = ref<string | undefined>("");
 const letter = ref<string | undefined>("");
 const pending = ref(false);
@@ -160,7 +158,7 @@ async function submit() {
 <!--    <img :src="piSvg" class="pi"/>-->
     <MorphingText :texts="texts" :class="$style.pi"/>
     <div :class="$style.image">
-      <ParticleImage :image-src="piSvg" init-position="misplaced" fade-position="explode"/>
+      <ParticleImage :image-src="logo54" init-position="misplaced" fade-position="explode"/>
     </div>
     <ProgressIndicator v-if="pending"/>
   </div>
@@ -212,6 +210,7 @@ async function submit() {
   right: 0;
   top: 0;
   z-index: 100;
+  filter: invert(1);
 }
 </style>
 
