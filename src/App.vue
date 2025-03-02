@@ -5,7 +5,8 @@ import LetterPullup from "@/components/LetterPullup.vue";
 import RippleButton from "@/components/RippleButton.vue";
 import {FloatLabel, InputText, Panel} from "primevue";
 import MorphingText from "@/components/MorphingText.vue";
-import logo54 from "@/assets/logo54.png"
+import logo54 from "@/assets/logo54.png";
+import doneSvg from "@/assets/done.svg";
 import ParticleImage from "@/components/ParticleImage.vue";
 import ProgressIndicator from "@/components/progressIndicator.vue";
 import confetti from "canvas-confetti";
@@ -97,7 +98,7 @@ function sideCannons() {
 }
 
 async function submit() {
-  if (!name.value?.length || !letter.value?.length) return;
+  if (!name.value?.length || !letter.value?.length || pending.value || done.value) return;
   pending.value = true;
   await reg(name.value, letter.value);
   done.value = true;
@@ -133,7 +134,11 @@ async function submit() {
           <template #header>
             <span class="formHeader">Регистрация</span>
           </template>
-          <div class="formContent">
+          <div v-if="done">
+            <ParticleImage :image-src="doneSvg"/>
+            <span class="doneLabel">Готово</span>
+          </div>
+          <div class="formContent" v-else>
             <FloatLabel variant="on">
               <InputText id="name" v-model="name"/>
               <label for="name">ФИО</label>
@@ -263,6 +268,7 @@ html, body, #app {
 .formHeader {
   font-family: "Comfortaa", serif;
   font-size: 48px;
+  color: white;
 }
 
 .formContent {
@@ -270,5 +276,15 @@ html, body, #app {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+
+  span, span input {
+    width: 100%;
+  }
+}
+
+.doneLabel {
+  font-family: "Comfortaa", serif;
+  font-size: 32px;
+  color: lightgreen;
 }
 </style>
