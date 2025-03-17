@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import ParticlesBg from "@/components/ParticlesBg.vue";
-import {computed, ref, useTemplateRef} from "vue";
-import {useColorMode} from "@vueuse/core";
+import {ref, useTemplateRef} from "vue";
 import LetterPullup from "@/components/LetterPullup.vue";
 import RippleButton from "@/components/RippleButton.vue";
 import {FloatLabel, InputText, Panel} from "primevue";
 import MorphingText from "@/components/MorphingText.vue";
-import piSvg from "@/assets/pi.svg"
+import logo54 from "@/assets/logo54.png";
+import doneSvg from "@/assets/done.svg";
 import ParticleImage from "@/components/ParticleImage.vue";
 import ProgressIndicator from "@/components/progressIndicator.vue";
 import confetti from "canvas-confetti";
 import {reg} from "@/api.js";
 
-const isDark = computed(() => useColorMode().value == "dark");
 const name = ref<string | undefined>("");
 const letter = ref<string | undefined>("");
 const pending = ref(false);
@@ -99,7 +98,7 @@ function sideCannons() {
 }
 
 async function submit() {
-  if (!name.value?.length || !letter.value?.length) return;
+  if (!name.value?.length || !letter.value?.length || pending.value || done.value) return;
   pending.value = true;
   await reg(name.value, letter.value);
   done.value = true;
@@ -135,7 +134,11 @@ async function submit() {
           <template #header>
             <span class="formHeader">Регистрация</span>
           </template>
-          <div class="formContent">
+          <div v-if="done">
+            <ParticleImage :image-src="doneSvg"/>
+            <span class="doneLabel">Готово</span>
+          </div>
+          <div class="formContent" v-else>
             <FloatLabel variant="on">
               <InputText id="name" v-model="name"/>
               <label for="name">ФИО</label>
@@ -153,14 +156,14 @@ async function submit() {
       class="absolute inset-0 z-1"
       :quantity="100"
       :ease="100"
-      :color="isDark ? '#FFF' : '#000'"
+      color="#FFF"
       :staticity="10"
       refresh
     />
 <!--    <img :src="piSvg" class="pi"/>-->
     <MorphingText :texts="texts" :class="$style.pi"/>
     <div :class="$style.image">
-      <ParticleImage :image-src="piSvg" init-position="misplaced" fade-position="explode"/>
+      <ParticleImage :image-src="logo54" init-position="misplaced" fade-position="explode"/>
     </div>
     <ProgressIndicator v-if="pending"/>
   </div>
@@ -204,6 +207,7 @@ async function submit() {
   text-align: left;
   font-size: 150px;
   font-family: "Comfortaa", serif;
+  color: white;
 }
 
 .image {
@@ -211,6 +215,7 @@ async function submit() {
   right: 0;
   top: 0;
   z-index: 100;
+  filter: invert(1);
 }
 </style>
 
@@ -263,6 +268,7 @@ html, body, #app {
 .formHeader {
   font-family: "Comfortaa", serif;
   font-size: 48px;
+  color: white;
 }
 
 .formContent {
@@ -270,5 +276,15 @@ html, body, #app {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+
+  span, span input {
+    width: 100%;
+  }
+}
+
+.doneLabel {
+  font-family: "Comfortaa", serif;
+  font-size: 32px;
+  color: lightgreen;
 }
 </style>
